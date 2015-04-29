@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor" />
+
+	<bean id="dataSourceProxy" class="saptac.core.DataSourceProxy">
+		<property name="dataSource" ref="dataSourceOracle" />
+		<property name="connectionTimeOut" value="600" />
+	</bean>
+
+	<!--  <bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceProxy" />
+	 <property name="lobHandler" ref="oracleLobHandler" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.IQDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="jdbc.fetch_size">50</prop>
+				<prop key="jdbc.batch_size">25</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.query.substitutions">true 1,false 0</prop>
+			</props>
+		</property>
+		-->
+		<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceProxy" />
+		<property name="hibernateProperties">
+        	<props>
+				<prop key="hibernate.dialect">exam_tools.ExamMysqlDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="jdbc.fetch_size">50</prop>
+				<prop key="jdbc.batch_size">25</prop>
+				<prop key="hibernate.hbm2ddl.auto">none</prop>
+				<prop key="hibernate.query.substitutions">true 1,false 0</prop>
+        	</props>
+        </property>
+	
+		<property name="mappingResources">
+			<list>
+				<value>exam_entity/base/ExamBaseRole.hbm.xml</value>
+				<value>exam_entity/rel/ExamRelRoleMenu.hbm.xml</value>
+				<value>exam_entity/sys/ExamSysMenu.hbm.xml</value>
+				<value>exam_entity/sys/ExamSysUser.hbm.xml</value>
+				<value>exam_entity/base/ExamDictionary.hbm.xml</value>
+				
+				<value>exam_entity/backstage/QuestionStore.hbm.xml</value>
+				<value>exam_entity/backstage/AnswerQtRel.hbm.xml</value>
+				<value>exam_entity/backstage/ExamineeQtRel.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!--  <bean id="oracleLobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler"
+		lazy-init="true">
+		<property name="nativeJdbcExtractor">
+			<ref bean="nativeJdbcExtractor" />
+		</property>
+	</bean>
+	-->
+	<!--
+		Transaction manager for a single Hibernate SessionFactory (alternative
+		to JTA)
+	-->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="baseTxService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="proxyTargetClass" value="true" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>

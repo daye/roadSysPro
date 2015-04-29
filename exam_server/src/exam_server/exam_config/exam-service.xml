@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-lazy-init="true">
+	
+	<bean id="BaseService" parent="baseTxService">
+		<property name="target">
+			<bean class="exam_service.impl.BaseServiceImpl"
+				autowire="byName" singleton="true">
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="SecurityService" parent="baseTxService">
+		<property name="target">
+			<bean class="exam_service.impl.SecurityServiceImpl"
+				autowire="byName" singleton="true">
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="SystemService" parent="baseTxService">
+		<property name="target">
+			<bean class="exam_service.impl.SystemServiceImpl"
+				autowire="byName" singleton="true">
+			</bean>
+		</property>
+	</bean>
+	<bean id="backstageService" parent="baseTxService">
+		<property name="target">
+			<bean class="exam_service.impl.BackstageServiceImpl"
+				autowire="byName" singleton="true">
+			</bean>
+		</property>
+	</bean>
+	<bean id="examService" parent="baseTxService">
+		<property name="target">
+			<bean class="exam_service.impl.ExamServiceImpl"
+				autowire="byName" singleton="true">
+			</bean>
+		</property>
+	</bean>
+</beans>
